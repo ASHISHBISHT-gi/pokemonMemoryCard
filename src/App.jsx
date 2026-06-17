@@ -3,10 +3,10 @@ import { useState , useEffect} from 'react';
 function Header({score,bestscore}){
   return(
     <header>
-    <h2>Memory Cards</h2>
+    <h1>Memory Cards</h1>
     <div className="scoreboard"> 
-     <h3>Score: {score}</h3>
-     <h3>Bestscore: {bestscore}</h3>
+     <h2>Score: <p className="score">{score}</p></h2>
+     <h2>Bestscore: <p className="best">{bestscore}</p></h2>
     </div>
     </header>
   )
