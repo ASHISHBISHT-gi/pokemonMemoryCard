@@ -20,8 +20,29 @@ async function imageurl(name){
    
 }
 
-function Image({name}){
-  const [url,setUrl] = useState(" ");  
+const shuffle = (string) => { 
+    return string.map((a) => ({ sort: Math.random(), value: a }))
+        .sort((a, b) => a.sort - b.sort)
+        .map((a) => a.value); 
+}; 
+
+function Image({name , target , score , setTarget , pokemons , changeScore , setPokemons , changebestScore}){
+  const [url , setUrl] = useState(" ");
+  // game_logic
+  const handleClick = (event) => {
+     // game over 
+    if(target == name){
+        changebestScore(score)
+        changeScore(0);
+        setPokemons(shuffle(pokemons));
+        setTarget(name);
+        
+    }else{
+      changeScore(score+1);
+      setPokemons(shuffle(pokemons));
+      setTarget(name);
+    }
+  };
   useEffect(()=>{
     async function loadimage(){
       setUrl(await imageurl(name));
@@ -29,7 +50,7 @@ function Image({name}){
     loadimage();
   },[]);
     return(
-    <div className="pokecards">
+    <div className="pokecards" onClick={handleClick}>
       {console.log("first")}
       <img src={url} alt={name} />
       {console.log("sec")}
@@ -38,11 +59,12 @@ function Image({name}){
 }
 
 
-function Mid({pokemons}){
+function Mid({pokemons , changeScore , score, setPokemons , changebestScore}){
+  const [target , setTarget] = useState(" ");
   return(
     <div className="mid">
       {pokemons.map((pokemon,index)=>(
-        <Image name={pokemon} key={pokemon} />
+        <Image name={pokemon} key={pokemon} score={score} target={target} setTarget={setTarget} pokemons={pokemons} changeScore={changeScore} setPokemons={setPokemons} changebestScore={changebestScore} />
       ))}
     </div>
   )
@@ -57,7 +79,7 @@ export default function App(){
   return(
       <main>
       <Header score={score} bestscore={bestscore} />
-      <Mid pokemons={pokemons} />
+      <Mid pokemons={pokemons} score={score} changeScore={changeScore} setPokemons={setPokemons} changebestScore={changebestScore} />
       </main>
 )
 }
