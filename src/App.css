@@ -72,7 +72,24 @@ header{
   justify-content:center;
   border-radius: 1rem;
   background-color:hsla(0,0%,100%,25%);
+  overflow:hidden;
 }
 .pokecards:hover{
     cursor:pointer;
+    background-color:hsla(0,0%,100%,60%);
+}
+.pokecards:hover img{
+  transform-origin: center;
+  animation-name: updown;
+  animation-duration: 1.5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes updown{
+  0%   {transform: translateY(0);}
+  25%  {transform: translateY(0.5rem);}
+  50%  {transform: translateY(0);}
+  75%  {transform: translateY(-0.5rem)}
+  100% {transform: translateY(0);}
 }
