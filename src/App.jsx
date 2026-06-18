@@ -26,22 +26,13 @@ const shuffle = (string) => {
         .map((a) => a.value); 
 }; 
 
-function Image({name , target , score , setTarget , pokemons , changeScore , setPokemons , changebestScore}){
+function Image({name , gameLogic}){
   const [url , setUrl] = useState(" ");
   // game_logic
   const handleClick = (event) => {
      // game over 
-    if(target == name){
-        changebestScore(score)
-        changeScore(0);
-        setPokemons(shuffle(pokemons));
-        setTarget(name);
-        
-    }else{
-      changeScore(score+1);
-      setPokemons(shuffle(pokemons));
-      setTarget(name);
-    }
+       gameLogic(name)
+    
   };
   useEffect(()=>{
     async function loadimage(){
@@ -59,12 +50,11 @@ function Image({name , target , score , setTarget , pokemons , changeScore , set
 }
 
 
-function Mid({pokemons , changeScore , score, setPokemons , changebestScore}){
-  const [target , setTarget] = useState(" ");
+function Mid({pokemons , gameLogic}){
   return(
     <div className="mid">
       {pokemons.map((pokemon,index)=>(
-        <Image name={pokemon} key={pokemon} score={score} target={target} setTarget={setTarget} pokemons={pokemons} changeScore={changeScore} setPokemons={setPokemons} changebestScore={changebestScore} />
+        <Image name={pokemon} key={pokemon} gameLogic={gameLogic}/>
       ))}
     </div>
   )
@@ -74,12 +64,29 @@ export default function App(){
   // current score and best score
   const [score , changeScore] = useState(0);
   const [bestscore , changebestScore] = useState(0);
-  const [pokemons , setPokemons]=useState(['charizard','mewtwo','ditto','mew','charmander','bulbasaur','arceus','palkia','dialga','salamence','riolu','lucario','pikachu','raichu','zekrom','darkrai','kyurem','alakazam']);
+  const [pokemons , setPokemons] = useState(['charizard','mewtwo','ditto','mew','charmander','bulbasaur','arceus','palkia','dialga','salamence','riolu','lucario','pikachu','raichu','zekrom','darkrai','kyurem','alakazam']);
+  const [targets , setTargets] = useState(new Set());
   
+  const gameLogic = (name) => {
+            // game over
+            if(targets.has(name)){
+              if(bestscore < score){
+                changebestScore(score)
+           }
+            changeScore(0)
+            setPokemons(shuffle(pokemons));
+            setTargets(new Set())
+          }else{
+          changeScore(score+1);
+          setPokemons(shuffle(pokemons));
+          const new_targets = new Set(targets);
+          setTargets(new_targets.add(name))
+    }
+  }
   return(
       <main>
       <Header score={score} bestscore={bestscore} />
-      <Mid pokemons={pokemons} score={score} changeScore={changeScore} setPokemons={setPokemons} changebestScore={changebestScore} />
+      <Mid pokemons={pokemons} gameLogic={gameLogic} />
       </main>
 )
 }
